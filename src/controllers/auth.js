@@ -13,11 +13,12 @@ const login = async (req, res, next) => {
   // validate password
   const passwordCorrect = await bcrypt.compare(req.body.password, user.password);
   // return generic error message
-  if (!user || !passwordCorrect) throw new Error('Email or password not correct');
-
-  const token = await jwt.sign({ userID: user.id, email: user.email }, 'includeasupersecretkey', { expiresIn: '5h' });
-
-  res.json({ userID: user.id, token, tokenExpiration: 1 });
+  if (!user || !passwordCorrect) {
+    res.json({ message: 'Email or password not correct' });
+  } else {
+    const token = await jwt.sign({ userID: user.id, email: user.email }, 'includeasupersecretkey', { expiresIn: '5h' });
+    res.json({ userID: user.id, token, tokenExpiration: 1 });
+  }
 };
 
 const register = async (req, res, next) => {
