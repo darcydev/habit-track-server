@@ -8,17 +8,30 @@ const transformHabit = (habit) => {
   };
 };
 
-const get = async (req, res, next) => {
+const all = async (req, res, next) => {
   if (!req.isAuth) {
     res.json({ error: 'User is not authenticated' });
-    throw new Error('User is not authenticated');
+  } else {
+    try {
+      const habits = await Habit.find();
+      res.json(habits.map((habit) => transformHabit(habit)));
+    } catch (error) {
+      throw error;
+    }
   }
+};
 
-  try {
-    const habits = await Habit.find();
-    res.json(habits.map((habit) => transformHabit(habit)));
-  } catch (error) {
-    throw error;
+const user = async (req, res, next) => {
+  if (!req.isAuth) {
+    res.json({ error: 'User is not authenticated' });
+  } else {
+    try {
+      const habits = await Habit.find({ user: req.body.userID });
+      res.json(habits.map((habit) => transformHabit(habit)));
+    } catch (error) {
+      res.json({ message: error });
+      throw new Error(error);
+    }
   }
 };
 
@@ -52,4 +65,4 @@ const create = async (req, res, next) => {
   }
 };
 
-module.exports = { get, create };
+module.exports = { all, user, create };
