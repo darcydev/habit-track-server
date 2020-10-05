@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 
 const isAuth = require('./middleware/is-auth');
 const AuthRoute = require('./routes/auth');
+const UserRoute = require('./routes/user');
 const HabitRoute = require('./routes/habit');
 
 const app = express();
@@ -41,7 +42,8 @@ app.use(express.json());
 app.use(isAuth);
 
 /* ROUTES */
-app.use('/api/user', AuthRoute);
+app.use('/api/auth', AuthRoute);
+app.use('/api/user', UserRoute);
 app.use('/api/habit', HabitRoute);
 
 // run the server
