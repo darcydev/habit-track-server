@@ -49,4 +49,9 @@ const editUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUser, editUser };
+const deleteUser = async (req, res, next) => {
+  // TODO
+  return false;
+};
+
+module.exports = { getUser, editUser, deleteUser };

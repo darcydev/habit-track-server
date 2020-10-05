@@ -8,9 +8,9 @@ const transformHabit = (habit) => {
   };
 };
 
-const all = async (req, res, next) => {
+/* const all = async (req, res, next) => {
   if (!req.isAuth) {
-    res.json({ error: 'User is not authenticated' });
+    res.json({ success: false, message: 'User is not authenticated' });
   } else {
     try {
       const habits = await Habit.find();
@@ -19,9 +19,9 @@ const all = async (req, res, next) => {
       throw error;
     }
   }
-};
+}; */
 
-const user = async (req, res, next) => {
+const getUserHabits = async (req, res, next) => {
   if (!req.isAuth) {
     res.json({ error: 'User is not authenticated' });
   } else {
@@ -29,23 +29,20 @@ const user = async (req, res, next) => {
       const habits = await Habit.find({ user: req.body.userID });
       res.json(habits.map((habit) => transformHabit(habit)));
     } catch (error) {
-      res.json({ message: error });
-      throw new Error(error);
+      res.json({ success: false, message: error });
     }
   }
 };
 
-const create = async (req, res, next) => {
+const createHabit = async (req, res, next) => {
   if (!req.isAuth) {
-    res.json({ error: 'User is not authenticated' });
-    throw new Error('User is not authenticated');
+    res.json({ success: false, error: 'User is not authenticated' });
   }
 
   const { user, title, description } = req.body;
 
   if (!user || !title || !description) {
-    res.json({ error: 'Please complete required fields' });
-    throw new Error('Please complete required fields');
+    res.json({ success: false, error: 'Please complete required fields' });
   }
 
   const habit = new Habit({
@@ -65,4 +62,4 @@ const create = async (req, res, next) => {
   }
 };
 
-module.exports = { all, user, create };
+module.exports = { all, getUserHabits, createHabit };
